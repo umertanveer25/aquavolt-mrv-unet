@@ -1,0 +1,39 @@
+{
+    "version": "AquaVolt-AI dMRV v1.2.0",
+    "last_updated": "2026-08-14T04:33:37Z",
+    "sensor_channels": [
+        "NDVI",
+        "NDWI",
+        "SAVI",
+        "LST",
+        "SAR_Soil_Moisture"
+    ],
+    "planetary_computer_stac_endpoint": "https://planetarycomputer.microsoft.com/api/stac/v1",
+    "verra_methodology": "VM0033 - Methodological Framework for the Calculation of GHG Emission Reductions from AWD",
+    "cdm_methodology": "ACM0022 - Large-scale Consolidated Methodology for Alternative Wetting and Drying",
+    "carbon_GWP_CH4": 28.0,
+    "verification_hash": "2a58ece971613837ddae230148519e7e1d928a6c4a2809d3122a747a26f505bd",
+    "signature_scheme": "ECDSA-secp256k1-SHA256",
+    "audit_trail": [
+        {
+            "step": "Ingestion",
+            "status": "VERIFIED",
+            "timestamp": "2026-06-28T06:00:00Z"
+        },
+        {
+            "step": "Imputation",
+            "status": "VERIFIED",
+            "timestamp": "2026-07-15T06:00:00Z"
+        },
+        {
+            "step": "U-Net Downscaling",
+            "status": "VERIFIED",
+            "timestamp": "2026-08-03T12:00:00Z"
+        },
+        {
+            "step": "Offset Calculation",
+            "status": "VERIFIED",
+            "timestamp": "2026-08-14T08:00:00Z"
+        }
+    ]
+}
