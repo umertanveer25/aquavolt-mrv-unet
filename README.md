@@ -23,6 +23,8 @@ The network fuses 5 orbital channels:
 5.  **Active Radar Soil Moisture** (Sentinel-1 SAR backscatter)
 
 ### System Architecture Flow
+![System Architecture Flowchart](./figures/fig1.png)
+
 ```mermaid
 graph TD
     A[Sentinel-2 Optical Bands] -->|Spectral Formulations| B(NDVI, NDWI, SAVI Tensors)
