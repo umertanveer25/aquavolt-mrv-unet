@@ -28,7 +28,9 @@ graph TD
     A[Sentinel-2 Optical Bands] -->|Spectral Formulations| B(NDVI, NDWI, SAVI Tensors)
     C[MODIS LST Bands] -->|Bilinear Downscaling| D(10m Land Surface Temp)
     E[Sentinel-1 SAR Backscatter] -->|Active C-Band Reflection| F(10m Radar Soil Moisture)
-    B & D & F -->|Sensor Fusion| G[5-Channel Input Grid: 8x8x5]
+    B -->|Sensor Fusion| G[5-Channel Input Grid: 8x8x5]
+    D -->|Sensor Fusion| G
+    F -->|Sensor Fusion| G
     G -->|Shallow U-Net Encoder| H{Feature Downsampling}
     H -->|Decoder & Skip Connections| I[1x1 Softmax Classifier]
     I -->|Methane Downscaling| J[10-Meter Spatial Hotspot Map: 8x8x4]
@@ -105,25 +107,25 @@ All outputs will be saved in the `figures/` directory.
 ## 🔬 Core Methodology & Models
 
 ### Model Topology (Shallow U-Net)
-Standard U-Nets collapse spatial resolution down to $1	imes 1$ pixel vectors. Because our input agricultural fields are shaped as $8	imes 8$ crop grids, we developed a shallow, 2-stage encoder/decoder layout. This prevents feature collapse, resulting in an lightweight model of only **142,000 parameters** that resists overfitting.
+Standard U-Nets collapse spatial resolution down to $1 \times 1$ pixel vectors. Because our input agricultural fields are shaped as $8 \times 8$ crop grids, we developed a shallow, 2-stage encoder/decoder layout. This prevents feature collapse, resulting in an lightweight model of only **142,000 parameters** that resists overfitting.
 
 ### Alternate Wetting and Drying (AWD) Biophysics
-Anaerobic soil methanogenesis occurs when soil redox potential ($E_h$) drops below $-150	ext{ mV}$. The dual-crop FAO-56 and water depletion equations are utilized to monitor the AWD drying cycle, triggering aeration phases that raise the redox potential to $+150	ext{ mV}$ (aerobic) to suppress methanogenesis and cut emissions by 50%.
+Anaerobic soil methanogenesis occurs when soil redox potential ($E_h$) drops below $-150 \text{ mV}$. The dual-crop FAO-56 and water depletion equations are utilized to monitor the AWD drying cycle, triggering aeration phases that raise the redox potential to $+150 \text{ mV}$ (aerobic) to suppress methanogenesis and cut emissions by 50%.
 
 ```mermaid
 sequenceDiagram
-    participant Irrigation as Water Management
-    participant Soil as Soil Matrix (Clay/Loam)
-    participant Microbes as Methanogenic Archaea
-    participant Atmosphere as Greenhouse Gas Flux
+    participant Irrigation as "Water Management"
+    participant Soil as "Soil Matrix (Clay/Loam)"
+    participant Microbes as "Methanogenic Archaea"
+    participant Atmosphere as "Greenhouse Gas Flux"
 
     Irrigation->>Soil: Flood Irrigation Phase (Saturated Depth > 0cm)
-    Note over Soil: Oxygen depleted; Redox Eh drops below -150mV
+    Note over Soil: Oxygen depleted, Redox Eh drops below -150mV
     Soil->>Microbes: Activation of Anaerobic Methanogenesis
     Microbes->>Atmosphere: Methane Emission Spikes (>20ppb, Class 3)
     
     Irrigation->>Soil: Aeration/Drying Phase (Water Table < -15cm)
-    Note over Soil: Oxygen diffusion; Redox Eh rises to +150mV
+    Note over Soil: Oxygen diffusion, Redox Eh rises to +150mV
     Soil->>Microbes: Deactivation of Methanogens (Aerobic oxidation)
     Microbes->>Atmosphere: Methane Abatement (Minimal, Class 0)
 ```
